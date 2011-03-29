@@ -4,10 +4,13 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.naveen.test.Employee;
+import com.naveen.test.annotation.CacheId;
 import com.naveen.test.dao.CacheDAO;
+import com.naveen.test.query.Query;
 import com.naveen.test.serializer.Serializer;
 import com.thoughtworks.xstream.XStream;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,10 +30,44 @@ public class XStreamCacheBroker implements CacheBrokerIF
 
 
     public <T> void save(T object) {
+        Field[] fields = object.getClass().getDeclaredFields();
+        Query query = getQueryToCheckIfAlreadyPresent(object, fields);
         String stringObject = serializer.getStringObject(object);
         stringObject = stringObject.replaceAll("\""+object.getClass().getName() + "\":", "");
         stringObject = stringObject.substring(stringObject.indexOf("{")+1,stringObject.lastIndexOf("}"));
-        cacheDAO.save((DBObject) JSON.parse(stringObject));
+        DBObject objectToSave = (DBObject) JSON.parse(stringObject);
+        DBObject dbObject = cacheDAO.searchById((DBObject) JSON.parse(query.getQuery()));
+        if(dbObject !=null)
+        {
+            Object id = dbObject.get("_id");
+            objectToSave.put("_id",id);
+        }
+        System.out.println();
+        cacheDAO.save(objectToSave);
+    }
+
+    private <T> Query getQueryToCheckIfAlreadyPresent(T object, Field[] fields) {
+        Query query = null;
+        for (Field field : fields) {
+            if(field.isAnnotationPresent(CacheId.class))
+            {
+               field.setAccessible(true);
+               if(query == null)
+               {
+                   query = new Query();
+               }
+                try {
+                    query.field(field.getName()).equalTo(String.valueOf(field.get(object)));
+                } catch (IllegalAccessException e) {
+                    throw new IllegalArgumentException("Invalid cache id ",e);
+                }
+            }
+        }
+        if(query ==null)
+        {
+            throw new IllegalArgumentException("No Cache Id defined for object :"+object.getClass().getName());
+        }
+        return query;
     }
 
     public <T> void delete(T object) {

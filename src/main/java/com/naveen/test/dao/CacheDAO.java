@@ -35,6 +35,11 @@ public class CacheDAO
         return mongo.getDB(dbName).getCollection(collectionName).find(object,fields);
     }
 
+    public DBObject searchById(DBObject object)
+    {
+        return mongo.getDB(dbName).getCollection(collectionName).findOne(object);
+    }
+
     public Mongo getMongo() {
         return mongo;
     }

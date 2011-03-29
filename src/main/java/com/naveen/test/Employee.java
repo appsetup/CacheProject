@@ -1,5 +1,7 @@
 package com.naveen.test;
 
+import com.naveen.test.annotation.CacheId;
+
 /**
  * Created by IntelliJ IDEA.
  * User: naveen
@@ -9,6 +11,7 @@ package com.naveen.test;
  */
 public class Employee
 {
+    @CacheId
     private long employeeId;
     private String firstName;
     private String lastName;

@@ -30,7 +30,8 @@ public class Testing
         employee.setFirstName("Naveen");
         employee.setLastName("Kumtakar");
         employee.setEmployeeDepartment(department);
-//        cacheManager.addCache(employee);
+        cacheManager.addCache(employee);
+        cacheManager.addCache(employee);
         BasicDBObject basicDBObject = new BasicDBObject("$gt",0);
 
 //        query.put("employeeId", new BasicDBObject("$gt",1).append("$lt",2));
@@ -71,7 +72,6 @@ public class Testing
         for (Employee employee1 : search) {
             System.out.println("employee1 = " + employee1);
         }
-        System.out.println();
 //        System.out.println("basicDBObject6 = " + basicDBObject6);
 //        cacheManager.search(basicDBObject5,basicDBObject6,Employee.class);
 //        cacheManager.deleteCache(employee);
