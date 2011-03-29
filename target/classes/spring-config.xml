@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+	   					   http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <bean id="mongoServerAddress" class="com.naveen.test.config.CacheServerAddress">
+        <property name="host" value="localhost"/>
+        <property name="port" value="27017"/>
+    </bean>
+
+    <bean id="mongoOptions" class="com.naveen.test.config.CacheMongoOptions" init-method="init">
+           <property name="connectionsPerHost" value="20"/>
+    </bean>
+
+    <bean id="mongoConnection" class="com.mongodb.Mongo">
+        <constructor-arg type="com.mongodb.ServerAddress">
+            <bean factory-bean="mongoServerAddress" factory-method="getServerAddress"/>
+        </constructor-arg>
+        <constructor-arg type="com.mongodb.MongoOptions" ref="mongoOptions">
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+        <property name="locations" value="classpath:cache.properties"/>
+    </bean>
+
+    <bean id="xStreamJSONSerializer" class="com.naveen.test.serializer.XStreamSerializer">
+        <property name="serializer">
+            <bean class="com.thoughtworks.xstream.XStream">
+                <constructor-arg type="com.thoughtworks.xstream.io.HierarchicalStreamDriver">
+                    <bean class="com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver"/>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    <bean id="cache" class="com.naveen.test.dao.CacheDAO">
+        <property name="mongo" ref="mongoConnection"/>
+        <property name="collectionName" value="cache"/>
+        <property name="dbName" value="cachedb"/>
+    </bean>
+    <bean id="cacheBroker" class="com.naveen.test.broker.XStreamCacheBroker">
+        <property name="cacheDAO" ref="cache"/>
+        <property name="serializer" ref="xStreamJSONSerializer"/>
+    </bean>
+
+    <bean id="cacheManager" class="com.naveen.test.CacheManager">
+        <property name="cacheBroker" ref="cacheBroker"/>
+    </bean>
+</beans>
