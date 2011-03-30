@@ -12,6 +12,8 @@ public class Query
     private static final String FLOWER_BRACE_OPEN = "{";
     private static final String FLOWER_BRACE_CLOSE = "}";
     private static final String DELIMITER = ":";
+    private static final String SQUARE_BRACE_OPEN = "[";
+    private static final String SQAURE_BRACE_CLOSE = "]";
     private StringBuilder stringBuilder = new StringBuilder();
 
     public Query field(String column)
@@ -72,19 +74,19 @@ public class Query
 
     public Query in(String value)
     {
-        updateQueryString("["+value+"]","$in");
+        updateQueryString(SQUARE_BRACE_OPEN +value+ SQAURE_BRACE_CLOSE,"$in");
         return this;
     }
 
     public Query all(String value)
     {
-        updateQueryString("["+value+"]","$all");
+        updateQueryString(SQUARE_BRACE_OPEN +value+ SQAURE_BRACE_CLOSE,"$all");
         return this;
     }
 
     public Query notIn(String value)
     {
-        updateQueryString("["+value+"]","$nin");
+        updateQueryString(SQUARE_BRACE_OPEN +value+ SQAURE_BRACE_CLOSE,"$nin");
         return this;
     }
 
@@ -101,7 +103,7 @@ public class Query
             orStringBuilder.append(query.getQuery()).append(",");
         }
         orStringBuilder = orStringBuilder.deleteCharAt(orStringBuilder.lastIndexOf(","));
-        updateQueryString("["+orStringBuilder+"]", "$or");
+        updateQueryString(SQUARE_BRACE_OPEN +orStringBuilder+ SQAURE_BRACE_CLOSE, "$or");
         return this;
     }
     private void updateQueryString(String value, String operator) {
