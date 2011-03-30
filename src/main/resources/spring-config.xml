@@ -42,7 +42,7 @@
         <property name="collectionName" value="cache"/>
         <property name="dbName" value="cachedb"/>
     </bean>
-    <bean id="cacheBroker" class="com.naveen.test.broker.XStreamCacheBroker">
+    <bean id="cacheBroker" class="com.naveen.test.broker.CommonCacheBroker">
         <property name="cacheDAO" ref="cache"/>
         <property name="serializer" ref="xStreamJSONSerializer"/>
     </bean>

@@ -24,10 +24,10 @@ import java.util.List;
  * Time: 10:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class XStreamCacheBroker implements CacheBrokerIF
+public class CommonCacheBroker implements CacheBrokerIF
 {
     private CacheDAO cacheDAO;
-    private Serializer<XStream> serializer;
+    private Serializer serializer;
 
 
     public <T> void save(T object) {
