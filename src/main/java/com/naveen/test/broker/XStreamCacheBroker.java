@@ -1,5 +1,6 @@
 package com.naveen.test.broker;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
@@ -89,29 +90,18 @@ public class XStreamCacheBroker implements CacheBrokerIF
         }
     }
 
-    public <T> List<T> search(DBObject object, DBObject requiredFields, Class<T> requiredType) {
-        DBCursor search = cacheDAO.search(object,requiredFields);
+    public <T> List<T> search(Query query, Class<T> requiredType) {
+        DBObject dbObject = new BasicDBObject();
+        dbObject.put("_id",0);
+        DBObject queryDBObject = (DBObject) JSON.parse(query.getQuery());
+        DBCursor search = cacheDAO.search(queryDBObject,dbObject);
         List<T> returnedData = new ArrayList<T>();
         while(search.hasNext())
         {
             DBObject next = search.next();
             System.out.println(next.toString());
-            String objectString = next.toString().replaceAll("\"_id.*}\\s+,", "");
-            T objectFromString = (T)serializer.getObjectFromString("{" + requiredType.getName() +":"+ objectString + "}");
+            T objectFromString = (T)serializer.getObjectFromString("{" + requiredType.getName() +":"+ next.toString() + "}");
             returnedData.add(objectFromString);
-        }
-        return returnedData;
-    }
-
-    public <T> List<T> search(DBObject object, Class<T> requiredType) {
-        DBCursor search = cacheDAO.search(object,null);
-        List<T> returnedData = new ArrayList<T>();
-        while(search.hasNext())
-        {
-            DBObject next = search.next();
-
-            System.out.println(next.toString());
-
         }
         return returnedData;
     }

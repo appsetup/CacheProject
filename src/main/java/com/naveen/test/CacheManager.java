@@ -3,6 +3,7 @@ package com.naveen.test;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.naveen.test.broker.CacheBrokerIF;
+import com.naveen.test.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +37,8 @@ public class CacheManager
         cacheBroker.delete(object);
     }
 
-    public <T> List<T> search(DBObject object, DBObject requiredFields, Class<T> requiredType) {
-        return cacheBroker.search(object,requiredFields,requiredType);
-    }
-
-    public <T> List<T> search(DBObject object, Class<T> requiredType) {
-        return cacheBroker.search(object,null);
+    public <T> List<T> search(Query object, Class<T> requiredType) {
+        return cacheBroker.search(object,requiredType);
     }
 
 }

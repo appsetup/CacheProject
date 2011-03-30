@@ -68,7 +68,7 @@ public class Testing
         Query secondCondition = new Query();
         secondCondition.field("employeeDepartment.departmentId").equalTo("1");
         query.or(firstCondition, secondCondition);
-        List<Employee> search = cacheManager.search((DBObject) JSON.parse(query.getQuery()), null, Employee.class);
+        List<Employee> search = cacheManager.search(query, Employee.class);
         for (Employee employee1 : search) {
             System.out.println("employee1 = " + employee1);
         }
