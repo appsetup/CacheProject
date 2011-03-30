@@ -6,6 +6,7 @@ import com.naveen.test.broker.CacheBrokerIF;
 import com.naveen.test.query.Query;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,9 +33,19 @@ public class CacheManager
         cacheBroker.save(object);
     }
 
+    public <T> void addAll(Collection<T> objects)
+    {
+        cacheBroker.saveAll(objects);
+    }
+
     public <T> void deleteCache(T object)
     {
         cacheBroker.delete(object);
+    }
+
+    public <T> void deleteAll(Collection<T>objects)
+    {
+        cacheBroker.deleteAll(objects);
     }
 
     public <T> List<T> search(Query object, Class<T> requiredType) {
