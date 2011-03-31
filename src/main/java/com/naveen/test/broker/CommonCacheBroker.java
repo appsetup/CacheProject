@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.naveen.test.Employee;
 import com.naveen.test.annotation.CacheId;
 import com.naveen.test.dao.CacheDAO;
 import com.naveen.test.query.Query;
@@ -14,7 +13,6 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
